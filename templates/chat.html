@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('http://localhost:5000/static/neww.webp');         
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        h1 {
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .response {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #28a745;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Product Price Inquiry</h1>
+        <form method="POST" action="/">
+            <input type="text" name="user_input" placeholder="Ask about a product..." required>
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="response">
+            {% if products %}
+            <h2>Available Products:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price ($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product, price in products %}
+                    <tr>
+                        <td>{{ product }}</td>
+                        <td>{{ price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h2>Response:</h2>
+            <p>{{ answer }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+import openai
+from flask import Flask, render_template, request
+import mysql.connector
+
+app = Flask(__name__)
+
+def get_max_price_product():
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="Jhoncena7@",
+        database="productdb"
+    )
+    cursor = conn.cursor()
+    cursor.execute("SELECT product, price FROM products ORDER BY price DESC LIMIT 1")
+    result = cursor.fetchone()
+    conn.close()
+    return result
+@app.route("/", methods=["GET", "POST"])
+def chat():
+    answer = ""
+    if request.method == "POST":
+        user_input = request.form['user_input']
+        product, price = get_max_price_product()
+
+        # Instead of calling OpenAI, we simulate the response
+        try:
+            # Simulate API response
+            response = {
+                "choices": [
+                    {"message": {"content": f"The product with the highest price is {product} which costs ${price}."}}
+                ]
+            }
+
+            # Extract the simulated response
+            answer = response['choices'][0]['message']['content'].strip()
+
+        except Exception as e:
+            answer = f"Error: {e}"
+
+        return render_template("chat.html", user_input=user_input, answer=answer)
+
+    return render_template("chat.html")
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
+    
