@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('http://localhost:5000/static/neww.webp');         
+            background-image: url('http://localhost:5000/static/neww.webp');
             background-size: cover;
             background-position: center;
             color: #fff;
@@ -37,6 +37,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-bottom: 10px; /* Added margin for spacing */
         }
         button:hover {
             background-color: #218838;
@@ -58,7 +59,41 @@
             background-color: #28a745;
             color: white;
         }
+        .chat-history {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+        .chat-entry {
+            margin-bottom: 10px;
+        }
+        .user-input {
+            color: #FFD700; /* Gold color for user queries */
+        }
+        .bot-response {
+            color: #ADD8E6; /* Light blue for bot responses */
+        }
     </style>
+    <script>
+        function clearChat() {
+            if (confirm("Are you sure you want to clear the chat history?")) {
+                // Make a request to clear the chat history
+                fetch('/clear_chat', { method: 'POST' })
+                    .then(response => {
+                        if (response.ok) {
+                            // Clear chat history on the frontend
+                            document.getElementById("chat-history").innerHTML = ""; // Clear chat history display
+                            document.getElementById("response").innerHTML = ""; // Clear the response display
+                        } else {
+                            alert("Failed to clear chat history. Please try again.");
+                        }
+                    });
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -67,8 +102,23 @@
             <input type="text" name="user_input" placeholder="Ask about a product..." required>
             <button type="submit">Submit</button>
         </form>
+        <button type="button" onclick="clearChat()">Clear Chat</button> <!-- Clear Chat Button -->
 
-        <div class="response">
+        <div class="response" id="response"> <!-- Added an id for the response div -->
+            <div class="chat-history" id="chat-history">
+                {% if chat_history %}
+                    {% for entry in chat_history|reverse %}
+                        <div class="chat-entry">
+                            <strong class="user-input">User:</strong> {{ entry.user_input }}<br>
+                            <strong class="bot-response">Bot:</strong> {{ entry.answer }}<br>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No chat history available.</p>
+                {% endif %}
+            </div>
+            
+        
             {% if products %}
             <h2>Available Products:</h2>
             <table>
@@ -88,8 +138,8 @@
                 </tbody>
             </table>
             {% else %}
-            <h2>Response:</h2>
-            <p>{{ answer }}</p>
+                <h2>Response:</h2>
+                <p>{{ answer }}</p>
             {% endif %}
         </div>
     </div>
