@@ -2,21 +2,11 @@ import mysql.connector
 import re
 from flask import Flask, render_template, request, session
 import openai
-from dotenv import load_dotenv
-import os
 
-
-dotenv_path = "D:\\LLMproject\\.env"  # Using double backslashes
-
-load_dotenv(dotenv_path=dotenv_path)
-print("Loaded .env file:", dotenv_path)
-api_key = os.getenv("OPENAI_API_KEY")
-print("API Key:", api_key)  # This will print the API key to the console for debugging
-
-if api_key is None:
-    raise ValueError("OpenAI API key not found. Please set it in your .env file.")
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'ab07ef46de54c42b1ad9652b0035004c'  # Us
+
+openai.api_key = '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'
 
 # Database configuration
 db_config = {
